@@ -1,14 +1,14 @@
 // Talya
-List, void* (pointer to function)
-Change all allocations to list
-Remove airport count field from AirportManager struct
+X - List, void* (pointer to function)
+X - Change all allocations to list
+X - Remove airport count field from AirportManager struct
 
 // Coral AND Talya:
-int initManager(AirportManager* pManager, const char* fileName)
-int initManagerAndAirline(AirportManager* pManager, Airline* pCompany)
+X - int initManager(AirportManager* pManager, const char* fileName)
+X - int initManagerAndAirline(AirportManager* pManager, Airline* pCompany)
 
 // Coral
-Files, Sort
-int saveManagerToFile(const AirportManager* pManager, const char* fileName)
-int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName)
-int saveAirlineToFile(const Airline* pComp, const char* fileName)
+V - Files, Sort
+X - int saveManagerToFile(const AirportManager* pManager, const char* fileName)
+X - int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName)
+X - int saveAirlineToFile(const Airline* pComp, const char* fileName)
