@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "Airline.h"
-#include "Airport.h"
-#include "General.h"
+#include "include/Airline.h"
+#include "include/Airport.h"
+#include "include/General.h"
+
 
 void	initAirline(Airline* pComp)
 {
@@ -18,7 +19,7 @@ void	initAirline(Airline* pComp)
 
 int	addFlight(Airline* pComp,const AirportManager* pManager)
 {
-	if (pManager->airportsCount < 2)
+	if (countAirportsInList(&pManager->airportsList) < 2)
 	{
 		printf("There are not enough airport to set a flight\n");
 		return 0;
