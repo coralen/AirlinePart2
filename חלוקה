@@ -9,6 +9,6 @@ X - int initManagerAndAirline(AirportManager* pManager, Airline* pCompany)
 
 // Coral
 V - Files, Sort
-X - int saveManagerToFile(const AirportManager* pManager, const char* fileName)
+V - int saveManagerToFile(const AirportManager* pManager, const char* fileName)
 X - int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName)
-X - int saveAirlineToFile(const Airline* pComp, const char* fileName)
+V - int saveAirlineToFile(const Airline* pComp, const char* fileName)
