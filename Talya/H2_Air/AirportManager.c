@@ -3,14 +3,15 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "AirportManager.h"
-#include "General.h"
+#include "include/AirportManager.h"
+#include "include/General.h"
 
 int	initManager(AirportManager* pManager)
 {
-	pManager->airportsCount = 0;
-	pManager->airportsArray = NULL;
-
+    //Talya added:
+//	pManager->airportsCount = 0;
+//	pManager->airportsList = NULL;
+    L_init( &pManager->airportsList);
 	return 1;
 }
 
@@ -26,20 +27,32 @@ int	addAirport(AirportManager* pManager)
 		free(pPort);
 		return 0;
 	}
-
-	pManager->airportsArray = (Airport**)realloc(pManager->airportsArray,
-		(pManager->airportsCount + 1) * sizeof(Airport*));
-	if (!pManager->airportsArray)
+//Talya added:
+	//pManager->airportsList = (Airport**)realloc(pManager->airportsList,
+		//(countAirportsInList(&pManager->airportsList) + 1) * sizeof(Airport*));
+	if (!&pManager->airportsList.head)
 	{
 		freeAirport(pPort);
 		free(pPort);
 		return 0;
 	}
-	
-	
-	pManager->airportsArray[pManager->airportsCount] = pPort;
-	pManager->airportsCount++;
+//Talya added:
+    L_insert( &pManager->airportsList.head,  pPort);
+	//pManager->airportsList[pManager->airportsCount] = pPort;
+	//pManager->airportsCount++;
 	return 1;
+}
+
+int countAirportsInList(const LIST* airportsList){
+    int countAirports=1;
+
+    if (!airportsList) return False;
+
+    while (!airportsList->head.key){
+        countAirports++;
+    }
+
+    return countAirports;
 }
 
 int  initAirport(Airport* pPort, AirportManager* pManager)
@@ -58,11 +71,21 @@ int  initAirport(Airport* pPort, AirportManager* pManager)
 
 Airport* findAirportByCode(const AirportManager* pManager, const char* code)
 {
-	for (int i = 0; i < pManager->airportsCount; i++)
-	{
-		if (isAirportCode(pManager->airportsArray[i], code))
-			return pManager->airportsArray[i];
-	}
+    //talya changed:
+
+//	for (int i = 0; i < countAirportsInList(&pManager->airportsList); i++)
+//	{
+//		if (isAirportCode(pManager->airportsList.head.key, code))
+//			return pManager->airportsList.head.key;
+//	}
+
+    NODE* ptr=pManager->airportsList.head.key;
+    while (!ptr){
+        if (isAirportCode(ptr->key, code))
+            return ptr->key;
+
+        ptr=ptr->next;
+    }
 	return NULL;
 }
 
@@ -79,26 +102,35 @@ int checkUniqeCode(const char* code,const AirportManager* pManager)
 
 void	printAirports(const AirportManager* pManager)
 {
-	printf("there are %d airports\n", pManager->airportsCount);
-	for (int i = 0; i < pManager->airportsCount; i++)
-	{
-		printAirport(pManager->airportsArray[i]);
-		printf("\n");
-	}
+    //talya changed the printing
+    printf("there are %d airports\n", countAirportsInList(&pManager->airportsList));
+
+    L_print(&pManager->airportsList, (void (*)(const void *)) printAirport);
+
 }
 
-void	freeManager(AirportManager* pManager)
+void freeManager(AirportManager* pManager)
 {
-	freeAirportArr(pManager);
+    freeAirportList(pManager);
 }
 
 
-void	freeAirportArr(AirportManager* pManager)
+void	freeAirportList(AirportManager* pManager)
 {
-	for (int i = 0; i < pManager->airportsCount; i++)
-	{
-		freeAirport(pManager->airportsArray[i]);
-		free(pManager->airportsArray[i]);
-	}
-	free(pManager->airportsArray);
+	//Talya changed
+    NODE* ptr=pManager->airportsList.head.next;
+
+    while (!ptr){
+        NODE* next = ptr->next;
+        L_free(&pManager->airportsList, (void (*)(void *))freeAirport);
+        ptr = next;
+    }
+
+
+//    for (int i = 0; i < pManager->airportsCount; i++)
+//	{
+//		freeAirport(pManager->airportsList[i]);
+//		free(pManager->airportsList[i]);
+//	}
+	//free(pManager->airportsList);
 }
