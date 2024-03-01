@@ -19,6 +19,7 @@ void	initAirline(Airline* pComp)
 
 int	addFlight(Airline* pComp,const AirportManager* pManager)
 {
+	//talya changed the counter here because in airportManager we needed to delete countAirports and replace it with a function that counts the airport in airportList when needed
 	if (countAirportsInList(&pManager->airportsList) < 2)
 	{
 		printf("There are not enough airport to set a flight\n");
