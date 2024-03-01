@@ -1,7 +1,14 @@
-טליה
-רשימה מקושרת
-מצביעים לפונקציה- אין צורך לממש את סעיף 3 לפי מייל חדש של אפרת
+// Talya
+List, void* (pointer to function)
+Change all allocations to list
+Remove airport count field from AirportManager struct
 
-קורל
-קבצים
-מיון חברת תעופה
+// Coral AND Talya:
+int initManager(AirportManager* pManager, const char* fileName)
+int initManagerAndAirline(AirportManager* pManager, Airline* pCompany)
+
+// Coral
+Files, Sort
+int saveManagerToFile(const AirportManager* pManager, const char* fileName)
+int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName)
+int saveAirlineToFile(const Airline* pComp, const char* fileName)
