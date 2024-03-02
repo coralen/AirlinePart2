@@ -1,7 +1,8 @@
 // Talya
 X - List, void* (pointer to function)
-X - Change all allocations to list
-X - Remove airport count field from AirportManager struct
+X - Change allocations to list in airport manager - change the airport array- finished!
+X - Remove airport count field from AirportManager struct - finished
+מצביעים לפונקציה- אין צורך לממש את סעיף 3 לפי מייל חדש של אפרת
 
 // Coral AND Talya:
 X - int initManagerAndAirline(AirportManager* pManager, Airline* pCompany)
