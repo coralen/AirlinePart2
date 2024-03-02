@@ -24,6 +24,8 @@ void	doPrintFlightsWithPlaneType(const Airline* pComp);
 void	freeFlightArr(Flight** arr, int size);
 void	freePlanes(Plane* arr, int size);
 void	freeCompany(Airline* pComp);
+void printFlightWrapper(void* pFlight);
+void printPlaneWrapper(void* pFlight);
 
 #endif
 

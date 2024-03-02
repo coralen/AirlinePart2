@@ -2,8 +2,17 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "General.h"
+#include "include/General.h"
 
+//talya added:
+void generalArrayFunction(void* array, int elementsInArray, int sizeOfElement, void (generalFunction)(void*)) {
+   void* ptr=array;
+
+    for (int i = 0; i < elementsInArray; ++i) {
+        generalFunction(ptr);
+        ptr += sizeOfElement;
+    }
+}
 
 
 char* getStrExactName(const char* msg)

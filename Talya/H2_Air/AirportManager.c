@@ -37,19 +37,46 @@ int	addAirport(AirportManager* pManager)
 		return 0;
 	}
 //Talya added:
-    L_insert( &pManager->airportsList.head,  pPort);
+    NODE* ptr=&pManager->airportsList.head;
+    ptr=findCorrectPlaceForAirport( ptr, pPort);
+    L_insert(ptr, pPort);
 	//pManager->airportsList[pManager->airportsCount] = pPort;
 	//pManager->airportsCount++;
 	return 1;
 }
+//Talya added:
+NODE* findCorrectPlaceForAirport(NODE* pNode, Airport* pPort){
+    NODE *ptr = pNode;
+    NODE* ptrTemp = pNode;
 
-int countAirportsInList(const LIST* airportsList){
-    int countAirports=1;
+    while (ptr) {
+        const char *currentCode = ((Airport *) ptr->key)->code;
+        if (compareCodes(pPort->code, currentCode)) {
+            return ptrTemp; //if the new code comes before the currentCode we return the previous pointer in the list
+        }
+        ptrTemp=ptr; //if the codes are equal we move on to the next pointer before checking the next code
+        ptr=ptr->next;
 
-    if (!airportsList) return False;
+    }
+    return ptrTemp; //if the code should be last in the list we return the pointer that points to Null
+}
+//talya added:
+BOOL compareCodes(const char* code1,const char* code2){
+    for (int i=0; i<IATA_LENGTH; i++){
+        if (code1[i]<code2[i]) return False;
+        if (code1[i]>code2[i]) return True;
+    }return False;
+}
 
-    while (!airportsList->head.key){
+int countAirportsInList(NODE* pNode){
+    int countAirports=0;
+    NODE* ptr= pNode;
+
+    if (!ptr) return countAirports;
+
+    while (ptr->next !=NULL){
         countAirports++;
+        ptr=ptr->next;
     }
 
     return countAirports;
@@ -79,9 +106,9 @@ Airport* findAirportByCode(const AirportManager* pManager, const char* code)
 //			return pManager->airportsList.head.key;
 //	}
 
-    NODE* ptr=pManager->airportsList.head.key;
-    while (!ptr){
-        if (isAirportCode(ptr->key, code))
+    NODE* ptr=&pManager->airportsList.head;
+    while (ptr !=NULL){
+        if (isAirportCode(((Airport*)ptr->key), code))
             return ptr->key;
 
         ptr=ptr->next;
@@ -103,7 +130,14 @@ int checkUniqeCode(const char* code,const AirportManager* pManager)
 void	printAirports(const AirportManager* pManager)
 {
     //talya changed the printing
-    printf("there are %d airports\n", countAirportsInList(&pManager->airportsList));
+    printf("there are %d airports\n", countAirportsInList(&pManager->airportsList.head));
+
+//    NODE* ptr=pManager->airportsList.head.key;
+
+//    while (ptr){
+//        printAirport((Airport *)ptr);
+//        ptr=ptr->next;
+//    }
 
     L_print(&pManager->airportsList, (void (*)(const void *)) printAirport);
 

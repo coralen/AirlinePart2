@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Flight.h"
-#include "General.h"
+#include "include/Flight.h"
+#include "include/General.h"
 
 
 void	initFlight(Flight* pFlight,Plane* thePlane, const AirportManager* pManager)

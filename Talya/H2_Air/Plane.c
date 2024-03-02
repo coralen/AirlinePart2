@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include "General.h"
-#include "Plane.h"
+#include "include/General.h"
+#include "include/Plane.h"
 
 
 

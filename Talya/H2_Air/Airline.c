@@ -19,8 +19,7 @@ void	initAirline(Airline* pComp)
 
 int	addFlight(Airline* pComp,const AirportManager* pManager)
 {
-	//talya changed the counter here because in airportManager we needed to delete countAirports and replace it with a function that counts the airport in airportList when needed
-	if (countAirportsInList(&pManager->airportsList) < 2)
+	if (countAirportsInList(&pManager->airportsList.head) < 2)
 	{
 		printf("There are not enough airport to set a flight\n");
 		return 0;
@@ -86,40 +85,61 @@ void printCompany(const Airline* pComp)
 	printFlightArr(pComp->flightArr, pComp->flightCount);
 }
 
+//talya changed to use the general function
 void	printFlightArr(Flight** arr, int size)
 {
-	for (int i = 0; i < size; i++)
-		printFlight(arr[i]);
+    generalArrayFunction(*arr, size, sizeof(Flight*), printFlightWrapper);
+
+//    for (int i = 0; i < size; i++)
+//		printFlight(arr[i]);
+}
+//talya added:
+void printFlightWrapper(void* pFlight) {
+    printFlight((const Flight*)pFlight);
 }
 
+//talya changed:
 void	printPlanesArr(Plane* arr, int size)
 {
-	for (int i = 0; i < size; i++)
-		printPlane(&arr[i]);
+    generalArrayFunction(arr, size, sizeof(Plane), printPlaneWrapper);
+
+//	for (int i = 0; i < size; i++)
+//		printPlane(&arr[i]);
+}
+//talya added:
+void printPlaneWrapper(void* pPlane) {
+    printPlane((const Plane *)pPlane);
 }
 
 void	doPrintFlightsWithPlaneType(const Airline* pComp)
 {
 	ePlaneType type = getPlaneType();
-	int count = 0;
+	//int count = 0;
 	printf("Flights with plane type %s:\n", GetPlaneTypeStr(type));
-	for (int i = 0; i < pComp->flightCount; i++)
-	{
-		if (isPlaneTypeInFlight(pComp->flightArr[i], type))
-		{
-			printFlight(pComp->flightArr[i]);
-			count++;
-		}
-	}
-	if(count == 0)
-		printf("Sorry - could not find a flight with plane type %s:\n", GetPlaneTypeStr(type));
-	printf("\n");
+    printFlightArr(pComp->flightArr, pComp->flightCount);
+
+ //talya changed
+
+//	for (int i = 0; i < pComp->flightCount; i++)
+//	{
+//		if (isPlaneTypeInFlight(pComp->flightArr[i], type))
+//		{
+//			printFlight(pComp->flightArr[i]);
+//			count++;
+//		}
+//	}
+//	if(count == 0)
+//		printf("Sorry - could not find a flight with plane type %s:\n", GetPlaneTypeStr(type));
+//	printf("\n");
 }
 
 void	freeFlightArr(Flight** arr, int size)
 {
-	for (int i = 0; i < size; i++)
-		free(arr[i]);
+    //talya added:
+    generalArrayFunction(*arr, size, sizeof(Flight*), free);
+
+//	for (int i = 0; i < size; i++)
+//		free(arr[i]);
 }
 
 void	freePlanes(Plane* arr, int size)

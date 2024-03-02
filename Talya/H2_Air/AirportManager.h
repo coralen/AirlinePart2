@@ -12,7 +12,7 @@ typedef struct
 }AirportManager;
 
 int		initManager(AirportManager* pManager);
-int countAirportsInList(const LIST* airportsList);
+int countAirportsInList(NODE* pNode);
 int		addAirport(AirportManager* pManager);
 int		initAirport(Airport* pPort, AirportManager* pManager);
 Airport* findAirportByCode(const AirportManager* pManager, const char* code);
@@ -20,4 +20,6 @@ int		checkUniqeCode(const char* code, const AirportManager* pManager);
 void	printAirports(const AirportManager* pManager);
 void	freeManager(AirportManager* pManager);
 void	freeAirportList(AirportManager* pManager);
+BOOL compareCodes(const char* code1,const char* code2);
+NODE* findCorrectPlaceForAirport(NODE* pNode, Airport* pPort);
 #endif

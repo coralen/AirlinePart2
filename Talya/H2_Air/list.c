@@ -157,7 +157,8 @@ BOOL L_free(LIST* pList, void (*freeFunc)(void*))
 ////////////////////////////////////////////////
 int L_print(const LIST* pList, void(*print)(const void*))
 {
-	NODE	*tmp;
+
+    NODE	*tmp;
 	int		c = 0;
 
 	if ( !pList ) 
@@ -167,6 +168,7 @@ int L_print(const LIST* pList, void(*print)(const void*))
 
     for ( tmp = pList->head.next;  tmp;  tmp = tmp->next, c++ )
         print(tmp->key);
+
 
 
 //	tmp = pList->head.next;
