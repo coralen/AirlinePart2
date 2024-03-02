@@ -71,3 +71,40 @@ Airport* setAiportToFlight(const AirportManager* pManager, const char* msg)
 
 	return port;
 }
+
+int	compareBySourceCode(const void* flight1, const void* flight2)
+{
+	const Flight* pFlight1 = *(const Flight**)flight1;
+	const Flight* pFlight2 = *(const Flight**)flight2;
+	return strcmp(pFlight1->sourceCode, pFlight2->sourceCode);
+}
+
+int	compareByDestCode(const void* flight1, const void* flight2)
+{
+	const Flight* pFlight1 = *(const Flight**)flight1;
+	const Flight* pFlight2 = *(const Flight**)flight2;
+	return strcmp(pFlight1->destCode, pFlight2->destCode);
+}
+
+int	compareByDate(const void* flight1, const void* flight2)
+{
+	const Flight* pFlight1 = *(const Flight**)flight1;
+	const Flight* pFlight2 = *(const Flight**)flight2;
+
+	Date date1 = pFlight1->date;
+	Date date2 = pFlight2->date;
+
+	// Compare year
+	if (date1.year > date2.year) return 1;
+	if (date1.year < date2.year) return -1;
+
+	// Compare month
+	if (date1.month > date2.month) return 1;
+	if (date1.month < date2.month) return -1;
+
+	// Compare day
+	if (date1.day > date2.day) return 1;
+	if (date1.day < date2.day) return -1;
+
+	return 0;
+}

@@ -5,11 +5,30 @@
 
 #include "AirportManager.h"
 #include "General.h"
+#include "TextFiles.h"
 
-int	initManager(AirportManager* pManager)
+
+// to delete
+//int	initManager(AirportManager* pManager)
+//{
+//	pManager->airportsCount = 0;
+//	pManager->airportsArray = NULL;
+//
+//	return 1;
+//}
+
+// coral added
+int initManager(AirportManager* pManager, const char* fileName)
 {
-	pManager->airportsCount = 0;
-	pManager->airportsArray = NULL;
+	pManager->airportsCount = 0; // check if needed
+	pManager->airportsArray = NULL; // check if needed
+
+	if (!readManagerFromFile(pManager, fileName)) {
+		
+		// add here the implementation for list
+		
+		return 2;
+	}
 
 	return 1;
 }
@@ -76,6 +95,27 @@ int checkUniqeCode(const char* code,const AirportManager* pManager)
 	return 1;
 }
 
+// coral added
+int saveManagerToFile(const AirportManager* pManager, const char* fileName)
+{
+	FILE* pFile;
+	pFile = fopen(fileName, "w");
+	if (!pFile) return 0;
+
+	if (!writeAirportManagerToTextFile(pFile, pManager)) return 0;
+
+	fclose(pFile);
+	return 1;
+}
+
+int readManagerFromFile(AirportManager* pManager, const char* fileName)
+{
+	FILE* pFile = fopen(fileName, "r");
+	if (!pFile) return 0;
+	if (!readAirportManagerFromTextFile(pFile, pManager)) return 0;
+	fclose(pFile);
+	return 1;
+}
 
 void	printAirports(const AirportManager* pManager)
 {

@@ -5,7 +5,6 @@
 #include "Plane.h"
 
 
-
 void	initPlane(Plane* pPlane, Plane* planeArr, int planeCount)
 {
 	pPlane->serialNum = getPlaneSN(planeArr, planeCount);

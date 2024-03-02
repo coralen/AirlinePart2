@@ -4,15 +4,21 @@
 #include "AirportManager.h"
 #include "General.h"
 
+#define BIN_FILE_NAME "airline.bin"
+#define TXT_FILE_NAME "airport_authority.txt"
+
 typedef enum 
 { 
 	eAddAirport,eAddPlane, eAddFlight, ePrintCompany, ePrintAirports,
-	ePrintFlightsPlaneType, eNofOptions
+	ePrintFlightsPlaneType, eSortFlight, eFindFlight, eSaveAirline, 
+	eSaveManager, eAirlineFromFile, eNofOptions 
 } eMenuOptions;
 
 const char* str[eNofOptions] = { "Add Airport","Add Plane","Add Flight",
 								"Print Airline", "Print all Airports",
-								"Print all flights with plane type" };
+								"Print all flights with plane type" , 
+								"Sort Flight", "Find Flight", "Save Airline", 
+								"Save Manager", "Airline From File"};
 
 #define EXIT			-1
 int menu();
@@ -22,7 +28,7 @@ int main()
 	AirportManager	manager;
 	Airline			company;
 
-	initManager(&manager);
+	initManager(&manager, TXT_FILE_NAME);
 	initAirline(&company);
 
 	int option;
@@ -59,6 +65,26 @@ int main()
 
 		case ePrintFlightsPlaneType:
 			doPrintFlightsWithPlaneType(&company);
+			break;
+
+		case eSortFlight:
+			sortAirline(&company);
+			break;
+
+		case eFindFlight:
+			FindAFlightInSorted(&company);
+			break;
+
+		case eSaveAirline:
+			saveAirlineToFile(&company, BIN_FILE_NAME);
+			break;
+
+		case eSaveManager:
+			saveManagerToFile(&manager, TXT_FILE_NAME);
+			break;
+
+		case eAirlineFromFile:
+			initAirlineFromFile(&company, &manager, BIN_FILE_NAME);
 			break;
 
 		case EXIT:

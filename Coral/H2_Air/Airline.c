@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
 #include "Airline.h"
 #include "Airport.h"
 #include "General.h"
+
+#include "BinaryFiles.h"
 
 void	initAirline(Airline* pComp)
 {
@@ -14,6 +17,20 @@ void	initAirline(Airline* pComp)
 	pComp->flightCount = 0;
 	pComp->planeArr = NULL;
 	pComp->planeCount = 0;
+	pComp->sortField = eNone; // Coral added
+}
+
+// coral added, why do we need pManager??
+int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName)
+{
+	pComp->flightArr = NULL; // check if needed
+	pComp->flightCount = 0; // check if needed
+	pComp->planeArr = NULL; // check if needed
+	pComp->planeCount = 0; // check if needed
+	pComp->sortField = eNone; 
+
+	if (!readAirlineFromFile(pComp, pManager, fileName)) return 0;
+	return 1;
 }
 
 int	addFlight(Airline* pComp,const AirportManager* pManager)
@@ -74,6 +91,100 @@ Plane* FindAPlane(Airline* pComp)
 	return temp;
 }
 
+// Coral added
+void sortAirline(Airline* pComp)
+{
+	int option;
+	printf("\n\n");
+	do {
+		printf("Base on what field do you want to sort?\n");
+		for (int i = 0; i < NUM_OF_SORT_TYPES; i++)
+			printf("Enter %d for %s\n", i + 1, sortFields[i]);
+		scanf("%d", &option);
+	} while (option < 1 || option > NUM_OF_SORT_TYPES);
+
+	pComp->sortField = (eSort)option;
+
+	switch (pComp->sortField)
+	{
+	case eSourceCode:
+		qsort(pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareBySourceCode);
+		break;
+
+	case eDestCode:
+		qsort(pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareByDestCode);
+		break;
+
+	case eDate:
+		qsort(pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareByDate);
+		break;
+	}
+
+}
+
+// Coral added
+void FindAFlightInSorted(const Airline* pComp)
+{
+	if (pComp->sortField == eNone) 
+	{
+		printf("The search cannot be performed, array not sorted\n");
+		return;
+	}
+
+	Flight** found = NULL;
+	Flight tmpFlight;
+	Flight* pTmpFlight = &tmpFlight;
+
+	switch (pComp->sortField)
+	{
+	case eSourceCode:
+		printf("Origin: \n");
+		getAirportCode(tmpFlight.sourceCode);
+		found = bsearch(&pTmpFlight, pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareBySourceCode);
+		break;
+
+	case eDestCode:
+		printf("Destination: \n");
+		getAirportCode(tmpFlight.destCode);
+		found = bsearch(&pTmpFlight, pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareByDestCode);
+		break;
+
+	case eDate:
+		getCorrectDate(&tmpFlight.date);
+		found = bsearch(&pTmpFlight, pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareByDate);
+		break;
+	}
+
+	if (found)
+	{
+		printf("Flight found, ");
+		printFlight(*found);
+		printf("\n");
+	}
+	else printf("Flight was not found\n");
+}
+
+// coral added
+int saveAirlineToFile(const Airline* pComp, const char* fileName)
+{
+	FILE* pFile;
+	pFile = fopen(fileName, "wb");
+	if (!pFile) return 0;
+
+	if (!writeAirlineToBFile(pFile, pComp)) return 0;
+	
+	fclose(pFile);
+	return 1;
+}
+
+int readAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName)
+{
+	FILE* pFile = fopen(fileName, "rb");
+	if (!pFile) return 0;
+	if (!readAirlineFromBFile(pFile, pComp, pManager)) return 0;
+	fclose(pFile);
+	return 1;
+}
 
 void printCompany(const Airline* pComp)
 {
