@@ -9,7 +9,6 @@
 void generalArrayFunction(void* array, int elementsInArray, int sizeOfElement, void (generalFunction)(void*)) 
 {
 	char* ptr = (char*)array;
-
 	for (int i = 0; i < elementsInArray; ++i) {
 		generalFunction(ptr);
 		ptr += sizeOfElement;

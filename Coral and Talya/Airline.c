@@ -16,15 +16,6 @@ void	initAirline(Airline* pComp)
 	setFedaults(pComp);
 }
 
-// coral added, why do we need pManager??
-int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName)
-{
-	setFedaults(pComp);
-
-	if (!readAirlineFromFile(pComp, pManager, fileName)) return 0;
-	return 1;
-}
-
 void setFedaults(Airline* pComp)
 {
 	pComp->flightArr = NULL;
@@ -34,14 +25,35 @@ void setFedaults(Airline* pComp)
 	pComp->sortField = eNone;
 }
 
-int	addFlight(Airline* pComp,const AirportManager* pManager)
+int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName)
+{
+	setFedaults(pComp);
+
+	if (!readAirlineFromFile(pComp, pManager, fileName)) return 0;
+	return 1;
+}
+
+
+int saveAirlineToFile(const Airline* pComp, const char* fileName)
+{
+	FILE* pFile;
+	pFile = fopen(fileName, "wb");
+	if (!pFile) return 0;
+
+	if (!writeAirlineToBFile(pFile, pComp)) return 0;
+
+	fclose(pFile);
+	return 1;
+}
+
+int	addFlight(Airline* pComp, AirportManager* pManager)
 {
 	if (countAirportsInList(&pManager->airportsList.head) < 2)
 	{
 		printf("There are not enough airport to set a flight\n");
 		return 0;
 	}
-	if(pComp->planeCount == 0)
+	if (pComp->planeCount == 0)
 	{
 		printf("There is no plane in company\n");
 		return 0;
@@ -50,10 +62,10 @@ int	addFlight(Airline* pComp,const AirportManager* pManager)
 	Flight* pFlight = (Flight*)calloc(1, sizeof(Flight));
 	if (!pFlight)
 		return 0;
-	
+
 	Plane* thePlane = FindAPlane(pComp);
 	printAirports(pManager);
-	initFlight(pFlight, thePlane,pManager);
+	initFlight(pFlight, thePlane, pManager);
 
 	pComp->flightArr = (Flight**)realloc(pComp->flightArr, (pComp->flightCount + 1) * sizeof(Flight*));
 	if (!pComp->flightArr)
@@ -79,20 +91,20 @@ int		addPlane(Airline* pComp)
 Plane* FindAPlane(Airline* pComp)
 {
 	printf("Choose a plane from list, type its serial Number\n");
-	printPlanesArr(pComp->planeArr,pComp->planeCount);
+	printPlanesArr(pComp->planeArr, pComp->planeCount);
 	int sn;
 	Plane* temp = NULL;
 	do {
 		scanf("%d", &sn);
-		temp = findPlaneBySN(pComp->planeArr,pComp->planeCount, sn);
+		temp = findPlaneBySN(pComp->planeArr, pComp->planeCount, sn);
 		if (!temp)
 			printf("No plane with that serial number! Try again!\n");
 	} while (temp == NULL);
-	 
+
 	return temp;
 }
 
-void sortAirline(Airline* pComp)
+void sortFlight(Airline* pComp)
 {
 	int option;
 	printf("\n\n");
@@ -122,9 +134,9 @@ void sortAirline(Airline* pComp)
 
 }
 
-void FindAFlightInSorted(const Airline* pComp)
+void findFlight(const Airline* pComp)
 {
-	if (pComp->sortField == eNone) 
+	if (pComp->sortField == eNone)
 	{
 		printf("The search cannot be performed, array not sorted\n");
 		return;
@@ -163,18 +175,6 @@ void FindAFlightInSorted(const Airline* pComp)
 	else printf("Flight was not found\n");
 }
 
-int saveAirlineToFile(const Airline* pComp, const char* fileName)
-{
-	FILE* pFile;
-	pFile = fopen(fileName, "wb");
-	if (!pFile) return 0;
-
-	if (!writeAirlineToBFile(pFile, pComp)) return 0;
-	
-	fclose(pFile);
-	return 1;
-}
-
 int readAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName)
 {
 	FILE* pFile = fopen(fileName, "rb");
@@ -193,14 +193,16 @@ void printCompany(const Airline* pComp)
 	printFlightArr(pComp->flightArr, pComp->flightCount);
 }
 
-void	printFlightArr(Flight** arr, int size)
+void	printFlightArr(Flight** const flightArr, int size)
 {
-	generalArrayFunction(*arr, size, sizeof(Flight*), printFlightWrapper);
+	generalArrayFunction(flightArr, size, sizeof(Flight*), printFlightWrapper); // deleter * from arr
 }
 
-void printFlightWrapper(void* pFlight) 
+void printFlightWrapper(void* pFlightPtr)
 {
-	printFlight((const Flight*)pFlight);
+	//printFlight((const Flight*)pFlight);
+	Flight* pFlight = *((Flight**)pFlightPtr); // Dereference to get Flight*
+	printFlight(pFlight);
 }
 
 
@@ -209,7 +211,7 @@ void	printPlanesArr(Plane* arr, int size)
 	generalArrayFunction(arr, size, sizeof(Plane), printPlaneWrapper);
 }
 
-void printPlaneWrapper(void* pPlane) 
+void printPlaneWrapper(void* pPlane)
 {
 	printPlane((const Plane*)pPlane);
 }
@@ -227,14 +229,21 @@ void	doPrintFlightsWithPlaneType(const Airline* pComp)
 			count++;
 		}
 	}
-	if(count == 0)
+	if (count == 0)
 		printf("Sorry - could not find a flight with plane type %s:\n", GetPlaneTypeStr(type));
 	printf("\n");
 }
 
-void	freeFlightArr(Flight** arr, int size)
+void	freeFlightArr(Flight** const flightArr, int size) // changes const statement for flight
 {
-	generalArrayFunction(arr, size, sizeof(Flight*), free); // removed * from *arr
+	if (flightArr == NULL) return; 
+	generalArrayFunction(flightArr, size, sizeof(Flight*), freeFlightWrapper); // removed * from *arr
+}
+
+void freeFlightWrapper(void* pFlight) 
+{
+	Flight* flight = *(Flight**)pFlight; 
+	free(flight);
 }
 
 void	freePlanes(Plane* arr, int size)

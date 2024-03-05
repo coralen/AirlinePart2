@@ -21,7 +21,7 @@ int writeAirportManagerToTextFile(FILE* pFile, AirportManager* pManager)
 	return 1;
 }
 
-int writeAirportToTextFile(FILE* pFile, Airport* pAirport)
+int writeAirportToTextFile(FILE* pFile, const Airport* pAirport)
 {
 	if (fprintf(pFile, "%s\n", pAirport->name) < 0) return 0;
 	if (fprintf(pFile, "%s\n", pAirport->country) < 0) return 0;
@@ -29,7 +29,7 @@ int writeAirportToTextFile(FILE* pFile, Airport* pAirport)
 	return 1;
 }
 
-int readAirportManagerFromTextFile(FILE* pFile, AirportManager* pManager) 
+int readAirportManagerFromTextFile(FILE* pFile, AirportManager* pManager)
 {
 	L_init(&pManager->airportsList);
 	Airport* pPort = NULL;
@@ -59,7 +59,7 @@ int readAirportManagerFromTextFile(FILE* pFile, AirportManager* pManager)
 		free(pPort);
 		return 0;
 	}
-	
+
 	return 1;
 }
 

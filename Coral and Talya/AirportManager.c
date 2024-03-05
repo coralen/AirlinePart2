@@ -13,7 +13,7 @@ int initManager(AirportManager* pManager, const char* fileName)
 
 	if (!readManagerFromFile(pManager, fileName)) {
 		if (!L_init(&pManager->airportsList)) return 0;
-		
+
 		return 2;
 	}
 
@@ -24,8 +24,7 @@ int initManager(AirportManager* pManager, const char* fileName)
 int	addAirport(AirportManager* pManager)
 {
 	Airport* pPort = (Airport*)calloc(1, sizeof(Airport));
-	if (!pPort)
-		return 0;
+	if (!pPort) return 0;
 
 	if (!initAirport(pPort, pManager))
 	{
@@ -42,7 +41,7 @@ int	addAirport(AirportManager* pManager)
 	}
 
 	NODE* ptr = findCorrectPlaceForAirport(&pManager->airportsList.head, pPort);
-	if (!L_insert(ptr, pPort)) 
+	if (!L_insert(ptr, pPort))
 	{
 		freeAirport(pPort);
 		free(pPort);
@@ -52,34 +51,34 @@ int	addAirport(AirportManager* pManager)
 	return 1;
 }
 
-NODE* findCorrectPlaceForAirport(NODE* pNode, Airport* pPort) 
+NODE* findCorrectPlaceForAirport(NODE* pNode, Airport* pPort)
 {
 	NODE* ptr = pNode->next;
 	NODE* ptrTemp = pNode;
 
-	while (ptr != NULL) 
+	while (ptr != NULL)
 	{
 		const char* currentCode = ((Airport*)ptr->key)->code;
 		if (compareCodes(pPort->code, currentCode)) {
-			return ptrTemp; 
+			return ptrTemp;
 		}
-		ptrTemp = ptr; 
+		ptrTemp = ptr;
 		ptr = ptr->next;
 
 	}
-	return ptrTemp; 
+	return ptrTemp;
 }
 
-BOOL compareCodes(const char* code1, const char* code2) 
+BOOL compareCodes(const char* code1, const char* code2)
 {
 	for (int i = 0; i < IATA_LENGTH; i++) {
-		if (code1[i] < code2[i]) return False;
-		if (code1[i] > code2[i]) return True;
+		if (code1[i] > code2[i]) return False;
+		if (code1[i] < code2[i]) return True;
 	}
 	return False;
 }
 
-int countAirportsInList(NODE* pNode) 
+int countAirportsInList(NODE* pNode)
 {
 	int countAirports = 0;
 	NODE* ptr = pNode;
@@ -111,7 +110,7 @@ int  initAirport(Airport* pPort, AirportManager* pManager)
 Airport* findAirportByCode(const AirportManager* pManager, const char* code)
 {
 	NODE* ptr = pManager->airportsList.head.next;
-	while (ptr) 
+	while (ptr)
 	{
 		if (ptr->key && isAirportCode(((Airport*)ptr->key), code))
 			return ptr->key;
@@ -120,7 +119,7 @@ Airport* findAirportByCode(const AirportManager* pManager, const char* code)
 	return NULL;
 }
 
-int checkUniqeCode(const char* code,const AirportManager* pManager)
+int checkUniqeCode(const char* code, const AirportManager* pManager)
 {
 	Airport* port = findAirportByCode(pManager, code);
 
@@ -131,7 +130,7 @@ int checkUniqeCode(const char* code,const AirportManager* pManager)
 }
 
 
-int saveManagerToFile(const AirportManager* pManager, const char* fileName)
+int saveManagerToFile(AirportManager* pManager, const char* fileName)
 {
 	FILE* pFile;
 	pFile = fopen(fileName, "w");
@@ -152,7 +151,7 @@ int readManagerFromFile(AirportManager* pManager, const char* fileName)
 	return 1;
 }
 
-void	printAirports(const AirportManager* pManager)
+void	printAirports(AirportManager* pManager)
 {
 	printf("there are %d airports\n", countAirportsInList(&pManager->airportsList.head));
 	L_print(&pManager->airportsList, (void (*)(const void*)) printAirport);

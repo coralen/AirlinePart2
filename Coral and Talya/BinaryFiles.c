@@ -6,7 +6,7 @@
 #include "BinaryFiles.h"
 
 
-int writeAirlineToBFile(FILE* pFile, Airline* pComp)
+int writeAirlineToBFile(FILE* pFile, const Airline* pComp)
 {
 	int len = strlen(pComp->name) + 1;
 	if (fwrite(&len, sizeof(int), 1, pFile) != 1) return 0;
@@ -18,7 +18,7 @@ int writeAirlineToBFile(FILE* pFile, Airline* pComp)
 	return 1;
 }
 
-int writePlaneArrToBFile(FILE* pFile, Plane* pPlaneArr, int count)
+int writePlaneArrToBFile(FILE* pFile, const Plane* pPlaneArr, const int count)
 {
 	for (int i = 0; i < count; i++)
 	{
@@ -31,18 +31,18 @@ int writePlaneArrToBFile(FILE* pFile, Plane* pPlaneArr, int count)
 	return 1;
 }
 
-int writePlaneToBFile(FILE* pFile, Plane* pPlane)
+int writePlaneToBFile(FILE* pFile, const Plane* pPlane)
 {
 	if (fwrite(&pPlane->serialNum, sizeof(int), 1, pFile) != 1) return 0;
 	if (fwrite(&pPlane->type, sizeof(ePlaneType), 1, pFile) != 1) return 0;
 	return 1;
 }
 
-int writeFlightArrToBFile(FILE* pFile, Flight** pFlightArr, int count)
+int writeFlightArrToBFile(FILE* pFile, Flight** const flightArr, const int count)
 {
 	for (int i = 0; i < count; i++)
 	{
-		if (!writeFlightToBFile(pFile, pFlightArr[i]))
+		if (!writeFlightToBFile(pFile, flightArr[i]))
 		{
 			fclose(pFile);
 			return 0;
@@ -51,22 +51,22 @@ int writeFlightArrToBFile(FILE* pFile, Flight** pFlightArr, int count)
 	return 1;
 }
 
-int writeFlightToBFile(FILE* pFile, Flight* pFlight)
+int writeFlightToBFile(FILE* pFile, const Flight* pFlight)
 {
-	int len = strlen(pFlight->sourceCode); // for both source and dest codes
-	
-	if (fwrite(&len, sizeof(int), 1, pFile) != 1) return 0;
-	if (fwrite(pFlight->sourceCode, sizeof(char), len, pFile) != len) return 0;
+	//int len = strlen(pFlight->sourceCode); // for both source and dest codes
 
-	if (fwrite(&len, sizeof(int), 1, pFile) != 1) return 0;
-	if (fwrite(pFlight->destCode, sizeof(char), len, pFile) != len) return 0;
+	//if (fwrite(&len, sizeof(int), 1, pFile) != 1) return 0;
+	if (fwrite(pFlight->sourceCode, sizeof(char), IATA_LENGTH, pFile) != IATA_LENGTH) return 0;
 
-	if (fwrite(&pFlight->flightPlane.serialNum, sizeof(int), 1, pFile) != 1) return 0; 
+	//if (fwrite(&len, sizeof(int), 1, pFile) != 1) return 0;
+	if (fwrite(pFlight->destCode, sizeof(char), IATA_LENGTH, pFile) != IATA_LENGTH) return 0;
+
+	if (fwrite(&pFlight->flightPlane.serialNum, sizeof(int), 1, pFile) != 1) return 0;
 	if (fwrite(&pFlight->date, sizeof(Date), 1, pFile) != 1) return 0;
 	return 1;
 }
 
-int readAirlineFromBFile(FILE* pFile, Airline* pComp)
+int readAirlineFromBFile(FILE* pFile, Airline* pComp, AirportManager* pManager)
 {
 	int len;
 
@@ -123,18 +123,19 @@ int readFlightArrFromBFile(FILE* pFile, Flight** pFlightArr, const int flightCou
 
 int readFlightFromBFile(FILE* pFile, Flight* pFlight, Plane* planeArr, const int planeCount)
 {
-	int len, serialNumber;
-	if (fread(&len, sizeof(int), 1, pFile) != 1) return 0;
-	if (fread(pFlight->sourceCode, sizeof(char), len, pFile) != len) return 0;
-	pFlight->sourceCode[len] = '\0';
+	int len = 0, serialNumber;
+	//if (fread(&len, sizeof(int), 1, pFile) != 1) return 0;
+	if (fread(pFlight->sourceCode, sizeof(char), IATA_LENGTH, pFile) != IATA_LENGTH) return 0;
+	pFlight->sourceCode[IATA_LENGTH] = '\0';
 
-	if (fread(&len, sizeof(int), 1, pFile) != 1) return 0;
-	if (fread(pFlight->destCode, sizeof(char), len, pFile) != len) return 0;
-	pFlight->destCode[len] = '\0';
+	//if (fread(&len, sizeof(int), 1, pFile) != 1) return 0;
+	if (fread(pFlight->destCode, sizeof(char), IATA_LENGTH, pFile) != IATA_LENGTH) return 0;
+	pFlight->destCode[IATA_LENGTH] = '\0';
 
 	if (fread(&serialNumber, sizeof(int), 1, pFile) != 1) return 0;
 	pFlight->flightPlane = *findPlaneBySN(planeArr, planeCount, serialNumber);
 
 	if (fread(&pFlight->date, sizeof(Date), 1, pFile) != 1) return 0;
+
 	return 1;
 }

@@ -3,118 +3,181 @@
 #include "Airline.h"
 #include "AirportManager.h"
 #include "General.h"
+#include "airlineFile.h"
 
-#define BIN_FILE_NAME "airline.bin"
-#define TXT_FILE_NAME "airport_authority.txt"
 
-typedef enum 
-{ 
-	eAddAirport,eAddPlane, eAddFlight, ePrintCompany, ePrintAirports,
-	ePrintFlightsPlaneType, eSortFlight, eFindFlight, eSaveAirline, 
-	eSaveManager, eAirlineFromFile, eNofOptions 
-} eMenuOptions;
 
-const char* str[eNofOptions] = { "Add Airport","Add Plane","Add Flight",
-								"Print Airline", "Print all Airports",
-								"Print all flights with plane type" , 
-								"Sort Flight", "Find Flight", "Save Airline", 
-								"Save Manager", "Airline From File"};
+#define MANAGER_FILE_NAME_SRC "airport_authority.txt"
+#define AIRLINE_FILE_NAME_SRC "airline.bin"
 
-#define EXIT			-1
-int menu();
+#define MANAGER_FILE_NAME_DST "airport_authority_out.txt"
+#define AIRLINE_FILE_NAME_DST "airline_out.bin"
+
+
+int initManagerAndAirline(AirportManager* pManager, Airline* pCompany);
+
 
 int main()
 {
+
 	AirportManager	manager;
 	Airline			company;
 
-	initManager(&manager, TXT_FILE_NAME);
-	initAirline(&company);
 
-	int option;
-	int stop = 0;
 
-	
-	do
+	int opt, res;
+	printf("Please choose one of the following options\n");
+	printf("1 - Print Airports\n");
+	printf("2 - Print Airline\n");
+	printf("3 - Add Airport Save\n");
+	printf("4 - Add Flight Save\n");
+	printf("5 - Add Plane Save\n");
+	printf("6 - Sort\n");
+	printf("7 - Find\n");
+	scanf("%d", &opt);
+
+	switch (opt)
 	{
-		option = menu();
-		switch (option)
+	case 1:
+		res = initManager(&manager, MANAGER_FILE_NAME_SRC);
+		if (!res)
 		{
-		case eAddPlane:
-			if (!addPlane(&company))
-				printf("Error adding plane\n");
-			break;
-
-		case eAddAirport:
-			if (!addAirport(&manager))
-				printf("Error adding airport\n");
-			break;
-
-		case eAddFlight:
-			if (!addFlight(&company, &manager))
-				printf("Error adding flight\n");
-			break;
-
-		case ePrintCompany:
-			printCompany(&company);
-			break;
-
-		case ePrintAirports:
-			printAirports(&manager);
-			break;
-
-		case ePrintFlightsPlaneType:
-			doPrintFlightsWithPlaneType(&company);
-			break;
-
-		case eSortFlight:
-			sortAirline(&company);
-			break;
-
-		case eFindFlight:
-			FindAFlightInSorted(&company);
-			break;
-
-		case eSaveAirline:
-			saveAirlineToFile(&company, BIN_FILE_NAME);
-			break;
-
-		case eSaveManager:
-			saveManagerToFile(&manager, TXT_FILE_NAME);
-			break;
-
-		case eAirlineFromFile:
-			initAirlineFromFile(&company, &manager, BIN_FILE_NAME);
-			break;
-
-		case EXIT:
-			printf("Bye bye\n");
-			stop = 1;
-			break;
-
-		default:
-			printf("Wrong option\n");
-			break;
+			printf("error init manager\n");
+			return 0;
 		}
-	} while (!stop);
+		printAirports(&manager);
+		printf("\n");
+		freeManager(&manager);
+		break;
 
-	freeManager(&manager);
-	freeCompany(&company);
-	
+	case 2:
+		res = initManager(&manager, MANAGER_FILE_NAME_SRC);
+		if (!res)
+		{
+			printf("error init manager\n");
+			return 0;
+		}
+
+		initAirlineFromFile(&company, &manager, AIRLINE_FILE_NAME_SRC);
+		//initAirline(&company);
+		//addPlane(&company);
+		//addFlight(&company, &manager);
+		//saveAirlineToFile(&company, AIRLINE_FILE_NAME_SRC);
+		printCompany(&company);
+		printf("\n");
+		freeManager(&manager);
+		freeCompany(&company);
+
+		getchar();
+		getchar();
+		break;
+
+	case 3:
+		res = initManager(&manager, MANAGER_FILE_NAME_SRC);
+		if (!res)
+		{
+			printf("error init manager\n");
+			return 0;
+		}
+		addAirport(&manager);
+		printAirports(&manager);
+		printf("\n");
+		saveManagerToFile(&manager, MANAGER_FILE_NAME_DST);
+		freeManager(&manager);
+		initManager(&manager, MANAGER_FILE_NAME_DST);
+		printAirports(&manager);
+		printf("\n");
+		freeManager(&manager);
+		break;
+
+
+	case 4:
+		if (!initManagerAndAirline(&manager, &company))
+		{
+			printf("error init");
+			return 0;
+		}
+		addFlight(&company, &manager);
+		printf("\n");
+		printFlightArr(company.flightArr, company.flightCount);
+		printf("\n");
+		saveAirlineToFile(&company, AIRLINE_FILE_NAME_DST);
+		freeCompany(&company);
+		initAirlineFromFile(&company, &manager, AIRLINE_FILE_NAME_DST);
+		printf("\n");
+		printFlightArr(company.flightArr, company.flightCount);
+		printf("\n");
+		freeManager(&manager);
+		freeCompany(&company);
+
+		getchar();
+		getchar();
+		break;
+
+	case 5:
+		if (!initManagerAndAirline(&manager, &company))
+		{
+			printf("error init");
+			return 0;
+		}
+		addPlane(&company);
+		printPlanesArr(company.planeArr, company.planeCount);
+		printf("\n");
+		saveAirlineToFile(&company, AIRLINE_FILE_NAME_DST);
+		freeCompany(&company);
+		freeManager(&manager);
+		initManager(&manager, MANAGER_FILE_NAME_DST);
+		initAirlineFromFile(&company, &manager, AIRLINE_FILE_NAME_DST);
+		printPlanesArr(company.planeArr, company.planeCount);
+		printf("\n");
+		freeManager(&manager);
+		freeCompany(&company);
+
+
+		getchar();
+		getchar();
+		break;
+
+	case 6:
+		if (!initManagerAndAirline(&manager, &company))
+		{
+			printf("error init");
+			return 0;
+		}
+		sortFlight(&company);
+		printf("\n");
+		printCompany(&company);
+		freeManager(&manager);
+		freeCompany(&company);
+		break;
+
+	case 7:
+		if (!initManagerAndAirline(&manager, &company))
+		{
+			printf("error init");
+			return 0;
+		}
+		findFlight(&company);
+		sortFlight(&company);
+		printf("\n");
+		printCompany(&company);
+		printf("\n");
+		findFlight(&company);
+		printf("\n");
+		freeManager(&manager);
+		freeCompany(&company);
+		break;
+
+	}
+
+
 	return 1;
 }
 
-int menu()
+
+int initManagerAndAirline(AirportManager* pManager, Airline* pCompany)
 {
-	int option;
-	printf("\n\n");
-	printf("Please choose one of the following options\n");
-	for(int i = 0 ; i < eNofOptions ; i++)
-		printf("%d - %s\n",i,str[i]);
-	printf("%d - Quit\n", EXIT);
-	scanf("%d", &option);
-	//clean buffer
-	char tav;
-	scanf("%c", &tav);
-	return option;
+	if (!initManager(pManager, MANAGER_FILE_NAME_SRC)) return 0;
+	if (!initAirlineFromFile(pCompany, pManager, AIRLINE_FILE_NAME_SRC)) initAirline(pCompany);
+	return 1;
 }

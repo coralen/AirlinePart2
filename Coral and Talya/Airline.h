@@ -16,33 +16,34 @@ static const char* sortFields[NUM_OF_SORT_TYPES] = { "Source Code", "Dest Code",
 
 typedef struct
 {
-	char*		name;
+	char* name;
 	int			flightCount;
-	Flight**	flightArr;
+	Flight** flightArr;
 	int			planeCount;
-	Plane*		planeArr;
-	eSort		sortField; 
+	Plane* planeArr;
+	eSort		sortField;
 }Airline;
 
 void	initAirline(Airline* pComp);
 void	setFedaults(Airline* pComp);
 int		initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName);
-int		addFlight(Airline* pComp,const AirportManager* pManager);
+int		addFlight(Airline* pComp, AirportManager* pManager);
 int		addPlane(Airline* pComp);
 int		saveAirlineToFile(const Airline* pComp, const char* fileName);
 int		readAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName);
-Plane*	FindAPlane(Airline* pComp);
+Plane* FindAPlane(Airline* pComp);
 void	printCompany(const Airline* pComp);
 void	printFlightArr(Flight** arr, int size);
 void	printFlightWrapper(void* pFlight);
-void	printPlanesArr(Plane* arr,int size);
+void	printPlanesArr(Plane* arr, int size);
 void	printPlaneWrapper(void* pPlane);
 void	doPrintFlightsWithPlaneType(const Airline* pComp);
 void	freeFlightArr(Flight** arr, int size);
+void	freeFlightWrapper(void* pFlight);
 void	freePlanes(Plane* arr, int size);
 void	freeCompany(Airline* pComp);
-void	sortAirline(Airline* pComp);
-void	FindAFlightInSorted(const Airline* pComp);
+void	sortFlight(Airline* pComp);
+void	findFlight(const Airline* pComp);
 
 #endif
 
