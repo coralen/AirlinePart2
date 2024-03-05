@@ -108,8 +108,8 @@ void sortFlight(Airline* pComp)
 {
 	int option;
 	printf("\n\n");
+	printf("Base on what field do you want to sort?\n");
 	do {
-		printf("Base on what field do you want to sort?\n");
 		for (int i = 0; i < NUM_OF_SORT_TYPES; i++)
 			printf("Enter %d for %s\n", i + 1, sortFields[i]);
 		scanf("%d", &option);
