@@ -10,11 +10,11 @@
 
 int writeAirportManagerToTextFile(FILE* pFile, AirportManager* pManager)
 {
-	NODE* ptr = &pManager->airportsList.head;
-	
+	NODE* ptr = pManager->airportsList.head.next;
+
 	fprintf(pFile, "%d\n", countAirportsInList(&pManager->airportsList.head));
-	
-	while (!ptr) {
+
+	while (ptr != NULL) {
 		if (!writeAirportToTextFile(pFile, (Airport*)ptr->key)) return 0;
 		ptr = ptr->next;
 	}
@@ -32,7 +32,6 @@ int writeAirportToTextFile(FILE* pFile, Airport* pAirport)
 int readAirportManagerFromTextFile(FILE* pFile, AirportManager* pManager) 
 {
 	L_init(&pManager->airportsList);
-	NODE* ptr = &pManager->airportsList.head;
 	Airport* pPort = NULL;
 	int count = 0;
 
@@ -42,16 +41,16 @@ int readAirportManagerFromTextFile(FILE* pFile, AirportManager* pManager)
 		pPort = (Airport*)calloc(1, sizeof(Airport));
 		if (!pPort) return 0;
 		if (!readAirportFromTextFile(pFile, pPort)) return 0;
-		if (!L_insert(ptr, pPort)) return 0;
+
+		NODE* ptr = findCorrectPlaceForAirport(&pManager->airportsList.head, pPort);
+		if (!L_insert(ptr, pPort))
+		{
+			freeAirport(pPort);
+			free(pPort);
+			return 0;
+		}
 		ptr = ptr->next;
 		count--;
-	}
-
-	if (!initAirport(pPort, pManager))
-	{
-		freeAirport(pPort);
-		free(pPort);
-		return 0;
 	}
 
 	if (!&pManager->airportsList.head)
@@ -60,10 +59,7 @@ int readAirportManagerFromTextFile(FILE* pFile, AirportManager* pManager)
 		free(pPort);
 		return 0;
 	}
-
-	//NODE* ptr = &pManager->airportsList.head;
 	
-
 	return 1;
 }
 
@@ -77,5 +73,6 @@ int readAirportFromTextFile(FILE* pFile, Airport* pAirport)
 	pAirport->country = _strdup(tmp);
 	if (!fscanf(pFile, "%s\n", tmp)) return 0;
 	strcpy(pAirport->code, tmp);
+
 	return 1;
 }

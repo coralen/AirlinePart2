@@ -12,7 +12,6 @@ int initManager(AirportManager* pManager, const char* fileName)
 {
 
 	if (!readManagerFromFile(pManager, fileName)) {
-		
 		if (!L_init(&pManager->airportsList)) return 0;
 		
 		return 2;
@@ -20,6 +19,7 @@ int initManager(AirportManager* pManager, const char* fileName)
 
 	return 1;
 }
+
 
 int	addAirport(AirportManager* pManager)
 {
@@ -41,19 +41,24 @@ int	addAirport(AirportManager* pManager)
 		return 0;
 	}
 
-	NODE* ptr = &pManager->airportsList.head;
-	ptr = findCorrectPlaceForAirport(ptr, pPort);
-	L_insert(ptr, pPort);
+	NODE* ptr = findCorrectPlaceForAirport(&pManager->airportsList.head, pPort);
+	if (!L_insert(ptr, pPort)) 
+	{
+		freeAirport(pPort);
+		free(pPort);
+		return 0;
+	}
 
 	return 1;
 }
 
 NODE* findCorrectPlaceForAirport(NODE* pNode, Airport* pPort) 
 {
-	NODE* ptr = pNode;
+	NODE* ptr = pNode->next;
 	NODE* ptrTemp = pNode;
 
-	while (ptr) {
+	while (ptr != NULL) 
+	{
 		const char* currentCode = ((Airport*)ptr->key)->code;
 		if (compareCodes(pPort->code, currentCode)) {
 			return ptrTemp; 
@@ -105,11 +110,11 @@ int  initAirport(Airport* pPort, AirportManager* pManager)
 
 Airport* findAirportByCode(const AirportManager* pManager, const char* code)
 {
-	NODE* ptr = &pManager->airportsList.head;
-	while (ptr != NULL) {
-		if (isAirportCode(((Airport*)ptr->key), code))
+	NODE* ptr = pManager->airportsList.head.next;
+	while (ptr) 
+	{
+		if (ptr->key && isAirportCode(((Airport*)ptr->key), code))
 			return ptr->key;
-
 		ptr = ptr->next;
 	}
 	return NULL;

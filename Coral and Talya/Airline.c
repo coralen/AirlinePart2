@@ -234,7 +234,7 @@ void	doPrintFlightsWithPlaneType(const Airline* pComp)
 
 void	freeFlightArr(Flight** arr, int size)
 {
-	generalArrayFunction(*arr, size, sizeof(Flight*), free);
+	generalArrayFunction(arr, size, sizeof(Flight*), free); // removed * from *arr
 }
 
 void	freePlanes(Plane* arr, int size)
