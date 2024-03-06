@@ -20,7 +20,6 @@ int		readManagerFromFile(AirportManager* pManager, const char* fileName);
 void	printAirports(AirportManager* pManager);
 void	freeManager(AirportManager* pManager);
 void	freeAirportList(AirportManager* pManager);
-BOOL	compareCodes(const char* code1, const char* code2);
-NODE* findCorrectPlaceForAirport(NODE* pNode, Airport* pPort);
+NODE*	findCorrectPlaceForAirport(NODE* pNode, Airport* pPort);
 
 #endif

@@ -14,7 +14,7 @@ int writeAirportManagerToTextFile(FILE* pFile, AirportManager* pManager)
 
 	fprintf(pFile, "%d\n", countAirportsInList(&pManager->airportsList.head));
 
-	while (ptr != NULL) {
+	while (ptr) {
 		if (!writeAirportToTextFile(pFile, (Airport*)ptr->key)) return 0;
 		ptr = ptr->next;
 	}

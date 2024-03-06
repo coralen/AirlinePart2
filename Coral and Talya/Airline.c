@@ -6,10 +6,9 @@
 #include "Airline.h"
 #include "Airport.h"
 #include "General.h"
-
 #include "airlineFile.h"
 
-void	initAirline(Airline* pComp)
+void initAirline(Airline* pComp)
 {
 	//printf("-----------  Init Airline\n");
 	pComp->name = getStrExactName("Enter Airline name");
@@ -28,7 +27,6 @@ void setFedaults(Airline* pComp)
 int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName)
 {
 	setFedaults(pComp);
-
 	if (!readAirlineFromFile(pComp, pManager, fileName)) return 0;
 	return 1;
 }
@@ -36,12 +34,10 @@ int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fi
 
 int saveAirlineToFile(const Airline* pComp, const char* fileName)
 {
-	FILE* pFile;
-	pFile = fopen(fileName, "wb");
-	if (!pFile) return 0;
+	FILE* pFile = NULL;
 
+	if (!(pFile = fopen(fileName, "wb"))) return 0;
 	if (!writeAirlineToBFile(pFile, pComp)) return 0;
-
 	fclose(pFile);
 	return 1;
 }
@@ -59,10 +55,8 @@ int	addFlight(Airline* pComp, AirportManager* pManager)
 		return 0;
 	}
 
-	Flight* pFlight = (Flight*)calloc(1, sizeof(Flight));
-	if (!pFlight)
-		return 0;
-
+	Flight* pFlight = NULL;
+	if (!(pFlight = (Flight*)calloc(1, sizeof(Flight)))) return 0;
 	Plane* thePlane = FindAPlane(pComp);
 	printAirports(pManager);
 	initFlight(pFlight, thePlane, pManager);
@@ -78,11 +72,10 @@ int	addFlight(Airline* pComp, AirportManager* pManager)
 	return 1;
 }
 
-int		addPlane(Airline* pComp)
+int addPlane(Airline* pComp)
 {
 	pComp->planeArr = (Plane*)realloc(pComp->planeArr, (pComp->planeCount + 1) * sizeof(Plane));
-	if (!pComp->planeArr)
-		return 0;
+	if (!pComp->planeArr) return 0;
 	initPlane(&pComp->planeArr[pComp->planeCount], pComp->planeArr, pComp->planeCount);
 	pComp->planeCount++;
 	return 1;

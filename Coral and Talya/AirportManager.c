@@ -156,9 +156,9 @@ void	freeAirportList(AirportManager* pManager)
 {
 	NODE* ptr = pManager->airportsList.head.next;
 
-	while (!ptr) {
-		NODE* next = ptr->next;
+	while (!ptr) 
+	{
 		L_free(&pManager->airportsList, (void (*)(void*))freeAirport);
-		ptr = next;
+		ptr = ptr->next;
 	}
 }
