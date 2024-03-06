@@ -236,13 +236,13 @@ void	doPrintFlightsWithPlaneType(const Airline* pComp)
 
 void	freeFlightArr(Flight** const flightArr, int size) // changes const statement for flight
 {
-	if (flightArr == NULL) return; 
+	if (flightArr == NULL) return;
 	generalArrayFunction(flightArr, size, sizeof(Flight*), freeFlightWrapper); // removed * from *arr
 }
 
-void freeFlightWrapper(void* pFlight) 
+void freeFlightWrapper(void* pFlight)
 {
-	Flight* flight = *(Flight**)pFlight; 
+	Flight* flight = *(Flight**)pFlight;
 	free(flight);
 }
 

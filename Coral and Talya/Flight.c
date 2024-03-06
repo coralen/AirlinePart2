@@ -6,7 +6,7 @@
 #include "General.h"
 
 
-void	initFlight(Flight* pFlight,Plane* thePlane, const AirportManager* pManager)
+void	initFlight(Flight* pFlight, Plane* thePlane, const AirportManager* pManager)
 {
 	Airport* pPortOr = setAiportToFlight(pManager, "Enter code of origin airport:");
 	strcpy(pFlight->sourceCode, pPortOr->code);
@@ -27,7 +27,7 @@ int		isFlightFromSourceAirport(const Flight* pFlight, const char* code)
 {
 	if (strcmp(pFlight->sourceCode, code) == 0)
 		return 1;
-		
+
 	return 0;
 }
 
@@ -50,7 +50,7 @@ int		isPlaneTypeInFlight(const Flight* pFlight, ePlaneType type)
 
 void	printFlight(const Flight* pFlight)
 {
-	printf("Flight From %s To %s\t",pFlight->sourceCode, pFlight->destCode);
+	printf("Flight From %s To %s\t", pFlight->sourceCode, pFlight->destCode);
 	printDate(&pFlight->date);
 	printf("\t");
 	printPlane(&pFlight->flightPlane);

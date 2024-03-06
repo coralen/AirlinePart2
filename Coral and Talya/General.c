@@ -6,7 +6,7 @@
 #include "General.h"
 #include "list.h"
 
-void generalArrayFunction(void* array, int elementsInArray, int sizeOfElement, void (generalFunction)(void*)) 
+void generalArrayFunction(void* array, int elementsInArray, int sizeOfElement, void (generalFunction)(void*))
 {
 	char* ptr = (char*)array;
 	for (int i = 0; i < elementsInArray; ++i) {
@@ -47,8 +47,8 @@ char* myGets(char* buffer, int size)
 		} while (ok && ((strlen(buffer) <= 1) && (isspace(buffer[0]))));
 		if (ok)
 		{
-            char* back = buffer + strlen(buffer);
-            //trim end spaces
+			char* back = buffer + strlen(buffer);
+			//trim end spaces
 			while ((buffer < back) && (isspace(*--back)));
 			*(back + 1) = '\0';
 			return buffer;

@@ -4,12 +4,12 @@
 #define MIN_SN 1
 #define MAX_SN 9999
 
-typedef enum { 
-	eCommercial, eCargo, eMilitary, eNofPlaneTypes 
+typedef enum {
+	eCommercial, eCargo, eMilitary, eNofPlaneTypes
 } ePlaneType;
 
 static const char* PlaneTypeStr[eNofPlaneTypes]
-		= { "Commercial", "Cargo", "Military" };
+= { "Commercial", "Cargo", "Military" };
 
 
 typedef struct
@@ -20,9 +20,9 @@ typedef struct
 
 void			initPlane(Plane* pPlane, Plane* planeArr, int planeCount);
 ePlaneType		getPlaneType();
-const char*		GetPlaneTypeStr(int type); 
+const char* GetPlaneTypeStr(int type);
 int				getPlaneSN(Plane* planeArr, int planeCount);
-Plane*			findPlaneBySN(Plane* planeArr, int count, int sn);
+Plane* findPlaneBySN(Plane* planeArr, int count, int sn);
 int				isSerialNumUnique(Plane* planeArr, int planeCount, int num);
 void			printPlane(const Plane* pPlane);
 void			freePlane(Plane* pPlane);
