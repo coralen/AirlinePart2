@@ -53,14 +53,8 @@ int writeFlightArrToBFile(FILE* pFile, Flight** const flightArr, const int count
 
 int writeFlightToBFile(FILE* pFile, const Flight* pFlight)
 {
-	//int len = strlen(pFlight->sourceCode); // for both source and dest codes
-
-	//if (fwrite(&len, sizeof(int), 1, pFile) != 1) return 0;
 	if (fwrite(pFlight->sourceCode, sizeof(char), IATA_LENGTH, pFile) != IATA_LENGTH) return 0;
-
-	//if (fwrite(&len, sizeof(int), 1, pFile) != 1) return 0;
 	if (fwrite(pFlight->destCode, sizeof(char), IATA_LENGTH, pFile) != IATA_LENGTH) return 0;
-
 	if (fwrite(&pFlight->flightPlane.serialNum, sizeof(int), 1, pFile) != 1) return 0;
 	if (fwrite(&pFlight->date, sizeof(Date), 1, pFile) != 1) return 0;
 	return 1;
@@ -124,11 +118,9 @@ int readFlightArrFromBFile(FILE* pFile, Flight** pFlightArr, const int flightCou
 int readFlightFromBFile(FILE* pFile, Flight* pFlight, Plane* planeArr, const int planeCount)
 {
 	int len = 0, serialNumber;
-	//if (fread(&len, sizeof(int), 1, pFile) != 1) return 0;
 	if (fread(pFlight->sourceCode, sizeof(char), IATA_LENGTH, pFile) != IATA_LENGTH) return 0;
 	pFlight->sourceCode[IATA_LENGTH] = '\0';
 
-	//if (fread(&len, sizeof(int), 1, pFile) != 1) return 0;
 	if (fread(pFlight->destCode, sizeof(char), IATA_LENGTH, pFile) != IATA_LENGTH) return 0;
 	pFlight->destCode[IATA_LENGTH] = '\0';
 

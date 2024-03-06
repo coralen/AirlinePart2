@@ -195,13 +195,12 @@ void printCompany(const Airline* pComp)
 
 void	printFlightArr(Flight** const flightArr, int size)
 {
-	generalArrayFunction(flightArr, size, sizeof(Flight*), printFlightWrapper); // deleter * from arr
+	generalArrayFunction(flightArr, size, sizeof(Flight*), printFlightWrapper);
 }
 
 void printFlightWrapper(void* pFlightPtr)
 {
-	//printFlight((const Flight*)pFlight);
-	Flight* pFlight = *((Flight**)pFlightPtr); // Dereference to get Flight*
+	Flight* pFlight = *((Flight**)pFlightPtr); 
 	printFlight(pFlight);
 }
 
@@ -234,10 +233,10 @@ void	doPrintFlightsWithPlaneType(const Airline* pComp)
 	printf("\n");
 }
 
-void	freeFlightArr(Flight** const flightArr, int size) // changes const statement for flight
+void	freeFlightArr(Flight** const flightArr, int size) 
 {
 	if (flightArr == NULL) return;
-	generalArrayFunction(flightArr, size, sizeof(Flight*), freeFlightWrapper); // removed * from *arr
+	generalArrayFunction(flightArr, size, sizeof(Flight*), freeFlightWrapper); 
 }
 
 void freeFlightWrapper(void* pFlight)
