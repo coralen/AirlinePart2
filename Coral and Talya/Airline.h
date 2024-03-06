@@ -25,7 +25,7 @@ typedef struct
 }Airline;
 
 void	initAirline(Airline* pComp);
-void	setFedaults(Airline* pComp);
+void	setDefaults(Airline* pComp);
 int		initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName);
 int		addFlight(Airline* pComp, AirportManager* pManager);
 int		addPlane(Airline* pComp);

@@ -39,7 +39,8 @@ NODE* L_insert(NODE* pNode, DATA Value)
 
     tmp = (NODE*)malloc(sizeof(NODE));	// new node
 
-    if (tmp != NULL) {
+    if (tmp != NULL) 
+    {
         tmp->key = Value;
         tmp->next = pNode->next;
         pNode->next = tmp;

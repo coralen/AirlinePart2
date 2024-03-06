@@ -12,10 +12,10 @@ void initAirline(Airline* pComp)
 {
 	//printf("-----------  Init Airline\n");
 	pComp->name = getStrExactName("Enter Airline name");
-	setFedaults(pComp);
+	setDefaults(pComp);
 }
 
-void setFedaults(Airline* pComp)
+void setDefaults(Airline* pComp)
 {
 	pComp->flightArr = NULL;
 	pComp->flightCount = 0;
@@ -26,7 +26,7 @@ void setFedaults(Airline* pComp)
 
 int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName)
 {
-	setFedaults(pComp);
+	setDefaults(pComp);
 	if (!readAirlineFromFile(pComp, pManager, fileName)) return 0;
 	return 1;
 }

@@ -11,7 +11,7 @@ int writeFlightToBFile(FILE* pFile, const Flight* pFlight);
 int readAirlineFromBFile(FILE* pFile, Airline* pComp, AirportManager* pManager);
 int readPlaneArrFromBFile(FILE* pFile, Plane* pPlaneArr, const int planeCount);
 int readPlaneFromBFile(FILE* pFile, Plane* pPlane);
-int readFlightArrFromBFile(FILE* pFile, Flight** pFlightArr, const int flightCount, Plane* pPlaneArr, const int planeCount);
-int readFlightFromBFile(FILE* pFile, Flight* pFlight, Plane* pPlaneArr, const int planeCount);
+int readFlightArrFromBFile(FILE* pFile, AirportManager* pManager, Flight** pFlightArr, const int flightCount, Plane* planeArr, const int planeCount);
+int readFlightFromBFile(FILE* pFile, AirportManager* pManager, Flight* pFlight, Plane* planeArr, const int planeCount);
 
 #endif

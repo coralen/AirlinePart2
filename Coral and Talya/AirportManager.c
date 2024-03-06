@@ -11,9 +11,9 @@
 int initManager(AirportManager* pManager, const char* fileName)
 {
 
-	if (!readManagerFromFile(pManager, fileName)) {
+	if (!readManagerFromFile(pManager, fileName)) 
+	{
 		if (!L_init(&pManager->airportsList)) return 0;
-
 		return 2;
 	}
 
@@ -74,7 +74,8 @@ int countAirportsInList(NODE* pNode)
 
 	if (!ptr) return countAirports;
 
-	while (ptr->next != NULL) {
+	while (ptr->next != NULL) 
+	{
 		countAirports++;
 		ptr = ptr->next;
 	}

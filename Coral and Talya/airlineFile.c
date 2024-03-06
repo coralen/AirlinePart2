@@ -77,7 +77,7 @@ int readAirlineFromBFile(FILE* pFile, Airline* pComp, AirportManager* pManager)
 	if (fread(&pComp->flightCount, sizeof(int), 1, pFile) != 1) return 0;
 	pComp->flightArr = (Flight**)realloc(pComp->flightArr, (pComp->flightCount) * sizeof(Flight*));
 	if (!pComp->flightArr) return 0;
-	readFlightArrFromBFile(pFile, pComp->flightArr, pComp->flightCount, pComp->planeArr, pComp->planeCount);
+	readFlightArrFromBFile(pFile, pManager, pComp->flightArr, pComp->flightCount, pComp->planeArr, pComp->planeCount);
 
 	return 1;
 }
@@ -102,27 +102,29 @@ int readPlaneFromBFile(FILE* pFile, Plane* pPlane)
 	return 1;
 }
 
-int readFlightArrFromBFile(FILE* pFile, Flight** pFlightArr, const int flightCount, Plane* planeArr, const int planeCount)
+int readFlightArrFromBFile(FILE* pFile, AirportManager* pManager, Flight** pFlightArr, const int flightCount, Plane* planeArr, const int planeCount)
 {
 	Flight* pFlight = NULL;
 	for (int i = 0; i < flightCount; i++)
 	{
 		pFlight = (Flight*)calloc(1, sizeof(Flight));
 		if (!pFlight) return 0;
-		if (!readFlightFromBFile(pFile, pFlight, planeArr, planeCount)) return 0;
+		if (!readFlightFromBFile(pFile, pManager, pFlight, planeArr, planeCount)) return 0;
 		pFlightArr[i] = pFlight;
 	}
 	return 1;
 }
 
-int readFlightFromBFile(FILE* pFile, Flight* pFlight, Plane* planeArr, const int planeCount)
+int readFlightFromBFile(FILE* pFile, AirportManager* pManager, Flight* pFlight, Plane* planeArr, const int planeCount)
 {
 	int len = 0, serialNumber;
 	if (fread(pFlight->sourceCode, sizeof(char), IATA_LENGTH, pFile) != IATA_LENGTH) return 0;
 	pFlight->sourceCode[IATA_LENGTH] = '\0';
+	if (!findAirportByCode(pManager, pFlight->sourceCode)) return 0;
 
 	if (fread(pFlight->destCode, sizeof(char), IATA_LENGTH, pFile) != IATA_LENGTH) return 0;
 	pFlight->destCode[IATA_LENGTH] = '\0';
+	if (!findAirportByCode(pManager, pFlight->destCode)) return 0;
 
 	if (fread(&serialNumber, sizeof(int), 1, pFile) != 1) return 0;
 	pFlight->flightPlane = *findPlaneBySN(planeArr, planeCount, serialNumber);
