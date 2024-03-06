@@ -59,23 +59,12 @@ NODE* findCorrectPlaceForAirport(NODE* pNode, Airport* pPort)
 	while (ptr != NULL)
 	{
 		const char* currentCode = ((Airport*)ptr->key)->code;
-		if (compareCodes(pPort->code, currentCode)) {
-			return ptrTemp;
-		}
+		if (strcmp(pPort->code, currentCode) < 0) return ptrTemp;
 		ptrTemp = ptr;
 		ptr = ptr->next;
 
 	}
 	return ptrTemp;
-}
-
-BOOL compareCodes(const char* code1, const char* code2)
-{
-	for (int i = 0; i < IATA_LENGTH; i++) {
-		if (code1[i] > code2[i]) return False;
-		if (code1[i] < code2[i]) return True;
-	}
-	return False;
 }
 
 int countAirportsInList(NODE* pNode)
