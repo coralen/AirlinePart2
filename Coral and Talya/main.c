@@ -57,19 +57,11 @@ int main()
 			printf("error init manager\n");
 			return 0;
 		}
-
 		initAirlineFromFile(&company, &manager, AIRLINE_FILE_NAME_SRC);
-		//initAirline(&company);
-		//addPlane(&company);
-		//addFlight(&company, &manager);
-		//saveAirlineToFile(&company, AIRLINE_FILE_NAME_SRC);
 		printCompany(&company);
 		printf("\n");
 		freeManager(&manager);
 		freeCompany(&company);
-
-		getchar();
-		getchar();
 		break;
 
 	case 3:
@@ -109,9 +101,6 @@ int main()
 		printf("\n");
 		freeManager(&manager);
 		freeCompany(&company);
-
-		getchar();
-		getchar();
 		break;
 
 	case 5:
@@ -132,10 +121,6 @@ int main()
 		printf("\n");
 		freeManager(&manager);
 		freeCompany(&company);
-
-
-		getchar();
-		getchar();
 		break;
 
 	case 6:
