@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -8,7 +7,7 @@
 
 int writeAirlineToBFile(FILE* pFile, const Airline* pComp)
 {
-	int len = strlen(pComp->name) + 1;
+	int len = (int)(strlen(pComp->name)) + 1;
 	if (fwrite(&len, sizeof(int), 1, pFile) != 1) return 0;
 	if (fwrite(pComp->name, sizeof(char), len, pFile) != len) return 0;
 	if (fwrite(&pComp->planeCount, sizeof(int), 1, pFile) != 1) return 0;
