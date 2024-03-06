@@ -42,13 +42,10 @@
     <ClCompile Include="AirportManager.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BinaryFiles.c">
+    <ClCompile Include="airlineFile.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TextFiles.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="airlineFile.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,13 +77,10 @@
     <ClInclude Include="def.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BinaryFiles.h">
+    <ClInclude Include="airlineFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TextFiles.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="airlineFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

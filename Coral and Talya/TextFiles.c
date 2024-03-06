@@ -68,9 +68,9 @@ int readAirportFromTextFile(FILE* pFile, Airport* pAirport)
 	char tmp[MAX_STR_LEN] = { 0 };
 
 	if (!fscanf(pFile, " %[^\n]\n", tmp)) return 0;
-	pAirport->name = strdup(tmp);
+	pAirport->name = _strdup(tmp);
 	if (!fscanf(pFile, " %[^\n]\n", tmp)) return 0;
-	pAirport->country = strdup(tmp);
+	pAirport->country = _strdup(tmp);
 	if (!fscanf(pFile, "%s\n", tmp)) return 0;
 	strcpy(pAirport->code, tmp);
 

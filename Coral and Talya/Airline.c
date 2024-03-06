@@ -7,7 +7,7 @@
 #include "Airport.h"
 #include "General.h"
 
-#include "BinaryFiles.h"
+#include "airlineFile.h"
 
 void	initAirline(Airline* pComp)
 {

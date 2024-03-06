@@ -129,10 +129,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Airline.c" />
-    <ClCompile Include="airlineFile.c" />
     <ClCompile Include="Airport.c" />
     <ClCompile Include="AirportManager.c" />
-    <ClCompile Include="BinaryFiles.c" />
+    <ClCompile Include="airlineFile.c" />
     <ClCompile Include="Date.c" />
     <ClCompile Include="Flight.c" />
     <ClCompile Include="General.c" />
@@ -143,10 +142,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Airline.h" />
-    <ClInclude Include="airlineFile.h" />
     <ClInclude Include="Airport.h" />
     <ClInclude Include="AirportManager.h" />
-    <ClInclude Include="BinaryFiles.h" />
+    <ClInclude Include="airlineFile.h" />
     <ClInclude Include="Date.h" />
     <ClInclude Include="def.h" />
     <ClInclude Include="Flight.h" />
