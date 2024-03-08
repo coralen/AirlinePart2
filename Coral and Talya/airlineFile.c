@@ -11,29 +11,9 @@ int writeAirlineToBFile(FILE* pFile, const Airline* pComp)
 	if (fwrite(&len, sizeof(int), 1, pFile) != 1) return 0;
 	if (fwrite(pComp->name, sizeof(char), len, pFile) != len) return 0;
 	if (fwrite(&pComp->planeCount, sizeof(int), 1, pFile) != 1) return 0;
-	if (!writePlaneArrToBFile(pFile, pComp->planeArr, pComp->planeCount)) return 0;
+	if (fwrite(pComp->planeArr, sizeof(Plane), pComp->planeCount, pFile) != pComp->planeCount) return 0;
 	if (fwrite(&pComp->flightCount, sizeof(int), 1, pFile) != 1) return 0;
 	if (!writeFlightArrToBFile(pFile, pComp->flightArr, pComp->flightCount)) return 0;
-	return 1;
-}
-
-int writePlaneArrToBFile(FILE* pFile, const Plane* pPlaneArr, const int count)
-{
-	for (int i = 0; i < count; i++)
-	{
-		if (!writePlaneToBFile(pFile, &pPlaneArr[i]))
-		{
-			fclose(pFile);
-			return 0;
-		}
-	}
-	return 1;
-}
-
-int writePlaneToBFile(FILE* pFile, const Plane* pPlane)
-{
-	if (fwrite(&pPlane->serialNum, sizeof(int), 1, pFile) != 1) return 0;
-	if (fwrite(&pPlane->type, sizeof(ePlaneType), 1, pFile) != 1) return 0;
 	return 1;
 }
 
@@ -71,33 +51,13 @@ int readAirlineFromBFile(FILE* pFile, Airline* pComp, AirportManager* pManager)
 	if (fread(&pComp->planeCount, sizeof(int), 1, pFile) != 1) return 0;
 	pComp->planeArr = (Plane*)realloc(pComp->planeArr, (pComp->planeCount) * sizeof(Plane));
 	if (!pComp->planeArr) return 0;
-	readPlaneArrFromBFile(pFile, pComp->planeArr, pComp->planeCount);
+	if (fread(pComp->planeArr, sizeof(Plane), pComp->planeCount, pFile) != pComp->planeCount) return 0;
 
 	if (fread(&pComp->flightCount, sizeof(int), 1, pFile) != 1) return 0;
 	pComp->flightArr = (Flight**)realloc(pComp->flightArr, (pComp->flightCount) * sizeof(Flight*));
 	if (!pComp->flightArr) return 0;
 	readFlightArrFromBFile(pFile, pManager, pComp->flightArr, pComp->flightCount, pComp->planeArr, pComp->planeCount);
 
-	return 1;
-}
-
-int readPlaneArrFromBFile(FILE* pFile, Plane* planeArr, const int planeCount)
-{
-	Plane* pPlane = NULL;
-	for (int i = 0; i < planeCount; i++)
-	{
-		pPlane = (Plane*)calloc(1, sizeof(Plane));
-		if (!pPlane) return 0;
-		if (!readPlaneFromBFile(pFile, pPlane)) return 0;
-		planeArr[i] = *pPlane;
-	}
-	return 1;
-}
-
-int readPlaneFromBFile(FILE* pFile, Plane* pPlane)
-{
-	if (fread(&pPlane->serialNum, sizeof(int), 1, pFile) != 1) return 0;
-	if (fread(&pPlane->type, sizeof(ePlaneType), 1, pFile) != 1) return 0;
 	return 1;
 }
 
@@ -116,7 +76,7 @@ int readFlightArrFromBFile(FILE* pFile, AirportManager* pManager, Flight** pFlig
 
 int readFlightFromBFile(FILE* pFile, AirportManager* pManager, Flight* pFlight, Plane* planeArr, const int planeCount)
 {
-	int len = 0, serialNumber;
+	int serialNumber;
 	if (fread(pFlight->sourceCode, sizeof(char), IATA_LENGTH, pFile) != IATA_LENGTH) return 0;
 	pFlight->sourceCode[IATA_LENGTH] = '\0';
 	if (!findAirportByCode(pManager, pFlight->sourceCode)) return 0;
@@ -124,6 +84,8 @@ int readFlightFromBFile(FILE* pFile, AirportManager* pManager, Flight* pFlight, 
 	if (fread(pFlight->destCode, sizeof(char), IATA_LENGTH, pFile) != IATA_LENGTH) return 0;
 	pFlight->destCode[IATA_LENGTH] = '\0';
 	if (!findAirportByCode(pManager, pFlight->destCode)) return 0;
+
+	if (pFlight->sourceCode == pFlight->destCode) return 0;
 
 	if (fread(&serialNumber, sizeof(int), 1, pFile) != 1) return 0;
 	pFlight->flightPlane = *findPlaneBySN(planeArr, planeCount, serialNumber);
