@@ -1,3 +1,4 @@
+#pragma warning(disable : 4996)
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,7 +51,6 @@ int readAirportManagerFromTextFile(FILE* pFile, AirportManager* pManager)
 			free(pPort);
 			return 0;
 		}
-		ptr = ptr->next;
 		count--;
 	}
 
@@ -68,10 +68,10 @@ int readAirportFromTextFile(FILE* pFile, Airport* pAirport)
 {
 	char tmp[MAX_STR_LEN] = { 0 };
 
-	if (!fscanf(pFile, " %[^\n]\n", tmp)) return 0;
-	pAirport->name = _strdup(tmp);
-	if (!fscanf(pFile, " %[^\n]\n", tmp)) return 0;
-	pAirport->country = _strdup(tmp);
+	if (!fscanf(pFile, " %255[^\n]\n", tmp)) return 0;
+	pAirport->name = strdup(tmp);
+	if (!fscanf(pFile, " %255[^\n]\n", tmp)) return 0;
+	pAirport->country = strdup(tmp);
 	if (!fscanf(pFile, "%s\n", tmp)) return 0;
 	strcpy(pAirport->code, tmp);
 

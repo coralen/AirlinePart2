@@ -37,7 +37,11 @@ int saveAirlineToFile(const Airline* pComp, const char* fileName)
 	FILE* pFile = NULL;
 
 	if (!(pFile = fopen(fileName, "wb"))) return 0;
-	if (!writeAirlineToBFile(pFile, pComp)) return 0;
+	if (!writeAirlineToBFile(pFile, pComp))
+	{
+		fclose(pFile);
+		return 0;
+	}
 	fclose(pFile);
 	return 1;
 }
@@ -172,7 +176,11 @@ int readAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fi
 {
 	FILE* pFile = fopen(fileName, "rb");
 	if (!pFile) return 0;
-	if (!readAirlineFromBFile(pFile, pComp, pManager)) return 0;
+	if (!readAirlineFromBFile(pFile, pComp, pManager))
+	{
+		fclose(pFile);
+		return 0;
+	}
 	fclose(pFile);
 	return 1;
 }

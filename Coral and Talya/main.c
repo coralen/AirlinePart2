@@ -7,11 +7,8 @@
 #include "airlineFile.h"
 
 
-#define MANAGER_FILE_NAME_SRC "airport_authority.txt"
-#define AIRLINE_FILE_NAME_SRC "airline.bin"
-
-#define MANAGER_FILE_NAME_DST "airport_authority_out.txt"
-#define AIRLINE_FILE_NAME_DST "airline_out.bin"
+#define MANAGER_FILE_NAME "airport_authority.txt"
+#define AIRLINE_FILE_NAME "airline.bin"
 
 #define EXIT			-1
 
@@ -83,6 +80,8 @@ int main()
 			break;
 
 		case EXIT:
+			saveAirlineToFile(&company, AIRLINE_FILE_NAME);
+			saveManagerToFile(&manager, MANAGER_FILE_NAME);
 			printf("Bye bye\n");
 			stop = 1;
 			break;
@@ -116,7 +115,7 @@ int menu()
 
 int initManagerAndAirline(AirportManager* pManager, Airline* pCompany)
 {
-	if (!initManager(pManager, MANAGER_FILE_NAME_SRC)) return 0;
-	if (!initAirlineFromFile(pCompany, pManager, AIRLINE_FILE_NAME_SRC)) initAirline(pCompany);
+	if (!initManager(pManager, MANAGER_FILE_NAME)) return 0;
+	if (!initAirlineFromFile(pCompany, pManager, AIRLINE_FILE_NAME)) initAirline(pCompany);
 	return 1;
 }
